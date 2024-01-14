@@ -5,8 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="39462d16-e1ec-46d5-bb0f-9f2c366a728b" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/Ex17/classes.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/classes.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project_parser/pars2.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project_parser/parser.py" beforeDir="false" afterPath="$PROJECT_DIR$/project_parser/parser.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -75,7 +76,7 @@
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/project_parser/pars2.py" />
+      <option name="SCRIPT_NAME" value="D:\Andy\rep_4_python\project_parser\parser.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
