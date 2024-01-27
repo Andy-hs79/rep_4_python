@@ -1,18 +1,7 @@
+import time
 import requests
 from bs4 import BeautifulSoup
-import collections
 import csv
-
-ParseResult = collections.namedtuple(
-    'ParseResult',
-    (
-        'name',
-        'weight',
-        'price',
-        'url',
-    ),
-)
-HEADERS = ("Название", "Вес", "Цена", "Ссылка",)
 
 
 def load_page(url, page: int = 1):
@@ -30,84 +19,91 @@ def load_page(url, page: int = 1):
 
 
 def parse_page(text: str):
+    weight_price = {}
     result = []
     soup = BeautifulSoup(text, "lxml")
     container = soup.find_all(class_="product")
     print(f'всего товаров - {len(container)}')
-
-    for block in container:
+    tmp = 0
+    #for block in container:
+    for i in range(5):
+        block = container[i]
+        tmp += 1
+        print(tmp)
         url_block = block.find('a').get('href').replace('\n', '')
         if not url_block:
             url_block = 'no url_block'
             print('no url_block')
             continue
-        weight_price = parse_products(url_block)
+
+        weight_price.update(parse_products(url_block))
+        time.sleep(2)
 
         title_block = block.find(class_="title").text.replace('\n', '')
         if not title_block:
             title_block = 'no title_block'
             print('no title_block')
 
-        result.append(ParseResult(
-            name=title_block,
-            weight=weight_price[0],
-            price=weight_price[1],
-            url=url_block,
-        ))
+        result.append({
+            'Название': title_block,
+            'Вес': weight_price['weight'],
+            'Цена': weight_price['price'],
+            'Ссылка': url_block,
+        })
     return result
 
 
-def parse_products(url):
-    src = load_page(url)
-    soup = BeautifulSoup(src, "lxml")
-    result, weights_container, price_container = [], [], []
-    single_products = soup.find(class_="product_weights")  # если продукт один в карточке
-    if single_products.text == '\n':
-        return soup.find(class_="price").text
+def parse_products(url: str):
+    result = {}
+    text = load_page(url)
+    soup = BeautifulSoup(text, "lxml")
+    weights, prices = [], []
+
+    if soup.find('div', class_="hcol-name_exp_last"):
+        weights = soup.find_all('div', class_="hcol-name_exp_last")  # собираю веса товаров в карточке
+    if len(weights) == 0:
+        prices = [soup.find('div', class_="price")]
+
     else:
-        weights_container = soup.find_all(class_="hcol-name_exp_last")  # собираю веса товаров в карточке
-        if soup.find(class_="hprice-new"):
-            price_container = soup.find_all(class_="hprice-new")  # если скидка есть беру класс hprice-new
-        else:
-            price_container = soup.find_all(class_="hprice")  # если нет, то класс hprice
+        prices = soup.find_all('span', class_=["hprice", 'hprice-new'])
 
-    for block in weights_container:
-        print(block.text)
-    for block in price_container:
-        print(block.text)
+    weights = [weight.text for weight in weights]
 
-    result.append(weights_container)
-    result.append(price_container)
+    if len(prices):
+        prices = [price.text for price in prices]
+
+        result.update({
+            'price': prices,
+            'weight': weights,
+        })
 
     return result
 
 
 def save_results(result):
-    # path = 'D:\\Andy\\rep_4_python\\project_parser\\data\\pars.csv'
-    # with open(path, "w", encoding="utf-8") as file:
-    #     writer = csv.writer(file, quoting=csv.QUOTE_MINIMAL)
-    #     writer.writerow(HEADERS)
-    #     for item in self.result:
-    #         writer.writerow(item)
-    # print(self.result)
+    HEADERS = ("Название", "Вес", "Цена", "Ссылка",)
+
     path = 'D:\\Andy\\rep_4_python\\project_parser\\data\\parsed_result_urls.csv'
-    with open(path, "w", encoding="utf-8") as file:
-        writer = csv.writer(file, quoting=csv.QUOTE_MINIMAL)
-        writer.writerow(HEADERS)
-        writer.writerows(result)
+    with open(path, mode="w", encoding='utf-8') as file:
+        file_writer = csv.DictWriter(file, delimiter=",", lineterminator="\r", fieldnames=HEADERS)
+        file_writer.writeheader()
+        file_writer.writerows(result)
+
 
 
 def run():
     result_page = []
     url_list = ['https://kormbosch.by/category/korm-dlja-sobak-bosch',
                 'https://kormbosch.by/category/korm-dlja-kotov-sanabelle']
-    for page in range(1, 3):
-        text = load_page(url=url_list[0], page=page)
-        result_page.extend(parse_page(text=text))
+    # for page in range(1, 3):
+    #     text = load_page(url=url_list[0], page=page)
+    #     result_page.extend(parse_page(text=text))
+    #     time.sleep(2)
     text = load_page(url=url_list[1], page=1)
     result_page.extend(parse_page(text=text))
+    print(result_page)
 
-    print(f'получили {len(result_page)} результатов')
+    print(f'всего результатов - {len(result_page)} ')
     save_results(result_page)
 
 
