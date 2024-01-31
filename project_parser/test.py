@@ -1,19 +1,8 @@
-from bs4 import BeautifulSoup
-html_doc = """
-<div class="example">
-<p>bla-bla-bla</p>
-<div>something not important</div>
-<strong>SomeText</strong>
-<br>
-Нужный текст
-<span style="color:red">Тоже нужный текст</span>
-Нужный текст
-</div>
-"""
-soup = BeautifulSoup(html_doc, "lxml")
-tag = soup.find("div", class_="example")
-
-tag.div.decompose() # убираем вложенный div
-tag.p.decompose()  # убираем текст в теге <p>
-tag.br.decompose() # убираем перенос <br>
-print(tag)
+el1 = 1
+el2 = 1
+n = 10
+print(el1)
+print(el2)
+for _ in range(n-2):
+    el2, el1 = (el1 + el2), el2
+    print(el2)

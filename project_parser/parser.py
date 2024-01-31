@@ -5,6 +5,7 @@ import csv
 
 
 def load_page(url, page: int = 1):
+    # имитация работы с браузером
     session = requests.Session()
     session.headers = {
         "Accept": "*/*",
@@ -25,11 +26,11 @@ def parse_page(text: str):
     container = soup.find_all(class_="product")
     print(f'всего товаров - {len(container)}')
     tmp = 0
-    #for block in container:
-    for i in range(5):
-        block = container[i]
+    for block in container:
+    #for i in range(20, 23):
+        #block = container[i]
         tmp += 1
-        print(tmp)
+        print(f'осталось {len(container) - tmp} ')
         url_block = block.find('a').get('href').replace('\n', '')
         if not url_block:
             url_block = 'no url_block'
@@ -39,38 +40,47 @@ def parse_page(text: str):
         weight_price.update(parse_products(url_block))
         time.sleep(2)
 
-        title_block = block.find(class_="title").text.replace('\n', '')
+        title_block = block.find(class_="title").text.strip().replace('\n', '')
         if not title_block:
             title_block = 'no title_block'
             print('no title_block')
-
-        result.append({
-            'Название': title_block,
-            'Вес': weight_price['weight'],
-            'Цена': weight_price['price'],
-            'Ссылка': url_block,
-        })
+        for j in range(len(weight_price['price'])):
+            if len(weight_price['price']) == 1:  # если товар в карточке один
+                result.append({
+                    'Название': title_block,
+                    'Вес': 'Одиночный товар',
+                    'Цена': weight_price['price'][0],
+                    'Ссылка': url_block,
+                })
+            # если товары в карточке представлены вариативно
+            else:
+                result.append({
+                    'Название': title_block,
+                    'Вес': weight_price['weight'][j],
+                    'Цена': weight_price['price'][j],
+                    'Ссылка': url_block,
+                })
     return result
 
 
 def parse_products(url: str):
-    result = {}
     text = load_page(url)
     soup = BeautifulSoup(text, "lxml")
-    weights, prices = [], []
 
+    weights, prices = [], []
+    result = {}
     if soup.find('div', class_="hcol-name_exp_last"):
         weights = soup.find_all('div', class_="hcol-name_exp_last")  # собираю веса товаров в карточке
+
     if len(weights) == 0:
         prices = [soup.find('div', class_="price")]
-
     else:
         prices = soup.find_all('span', class_=["hprice", 'hprice-new'])
 
-    weights = [weight.text for weight in weights]
+    weights = [weight.text for weight in weights]  # получаю значения весов товаров из тэгов
 
     if len(prices):
-        prices = [price.text for price in prices]
+        prices = [price.text for price in prices]  # получаю значения цен товаров из тэгов
 
         result.update({
             'price': prices,
@@ -81,11 +91,11 @@ def parse_products(url: str):
 
 
 def save_results(result):
-    HEADERS = ("Название", "Вес", "Цена", "Ссылка",)
+    headers = ("Название", "Вес", "Цена", "Ссылка",)
 
-    path = 'D:\\Andy\\rep_4_python\\project_parser\\data\\parsed_result_urls.csv'
+    path = 'D:\\Andy\\rep_4_python\\project_parser\\data\\parsed_result.csv'
     with open(path, mode="w", encoding='utf-8') as file:
-        file_writer = csv.DictWriter(file, delimiter=",", lineterminator="\r", fieldnames=HEADERS)
+        file_writer = csv.DictWriter(file, delimiter=",", lineterminator="\r", fieldnames=headers)
         file_writer.writeheader()
         file_writer.writerows(result)
 
@@ -95,10 +105,10 @@ def run():
     result_page = []
     url_list = ['https://kormbosch.by/category/korm-dlja-sobak-bosch',
                 'https://kormbosch.by/category/korm-dlja-kotov-sanabelle']
-    # for page in range(1, 3):
-    #     text = load_page(url=url_list[0], page=page)
-    #     result_page.extend(parse_page(text=text))
-    #     time.sleep(2)
+    for page in range(1, 3):
+        text = load_page(url=url_list[0], page=page)
+        result_page.extend(parse_page(text=text))
+        time.sleep(2)
     text = load_page(url=url_list[1], page=1)
     result_page.extend(parse_page(text=text))
     print(result_page)
