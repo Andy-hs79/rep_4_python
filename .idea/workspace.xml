@@ -5,6 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="39462d16-e1ec-46d5-bb0f-9f2c366a728b" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/project_parser/data/parsed_result.csv" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/project_parser/data/parsed_result_urls.csv" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/project_parser/parser.py" beforeDir="false" afterPath="$PROJECT_DIR$/project_parser/parser.py" afterDir="false" />
