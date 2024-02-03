@@ -1,8 +1,3 @@
-el1 = 1
-el2 = 1
-n = 10
-print(el1)
-print(el2)
-for _ in range(n-2):
-    el2, el1 = (el1 + el2), el2
-    print(el2)
+dictionary = {"some_key": "some_value"}
+for key in dictionary:
+    print("%s --> %s" % (key, dictionary[key]))
