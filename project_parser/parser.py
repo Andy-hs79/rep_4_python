@@ -15,6 +15,7 @@ def load_page(url, page: int = 1):
         'page': page
     }
     res = session.get(url, params=param)
+    # Проверить успешность запроса можно с помощью свойства status_code или вызвать метод raise_for_status()
     res.raise_for_status()
     return res.text
 
@@ -23,14 +24,14 @@ def parse_page(text: str):
     weight_price = {}
     result = []
     soup = BeautifulSoup(text, "lxml")
-    container = soup.find_all(class_="product")
+    container = soup.find_all('div', class_="product")
     print(f'всего товаров - {len(container)}')
-    tmp = 0
+    count = 0
     for block in container:
     #for i in range(20, 23):
         #block = container[i]
-        tmp += 1
-        print(f'осталось {len(container) - tmp} ')
+        count += 1
+        print(f'осталось {len(container) - count} ')
         url_block = block.find('a').get('href').replace('\n', '')
         if not url_block:
             url_block = 'no url_block'
@@ -40,7 +41,11 @@ def parse_page(text: str):
         weight_price.update(parse_products(url_block))
         time.sleep(2)
 
-        title_block = block.find(class_="title").text.strip().replace('\n', '')
+        title_block = block.find('div', class_="title").text.strip().replace('\n', '')
+        r_border = title_block.rfind(' ')  # для обрезания массы в названии, кроме одиночных товаров
+        if len(weight_price['price']) > 1:
+            title_block = title_block[:r_border]
+
         if not title_block:
             title_block = 'no title_block'
             print('no title_block')
