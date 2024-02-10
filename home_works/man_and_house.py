@@ -20,3 +20,16 @@
 площади и кол-ва денег у него на счету, а так же выведет список домов, которые можно рекомендовать. Параметры для
 рекомендации можно выбрать любые. Например, если применить скидку стоимость дома будет подходящей, если человек
 заработает еще, стоимость так же будет подходящей."""
+
+class Human:
+    def __init__(self, name: str, age: int, money: int, have_home: bool):
+        self.name = name
+        self.age = age
+        self.money = money
+        self.have_home = have_home
+
+    def earn_money(self, amound):
+        self.money += amound
+class House:
+        def __init__(self, square, cost, ):
+
