@@ -13,6 +13,7 @@ class Page(models.Model):
     title = models.CharField(max_length=50, verbose_name='Заголовок страницы')
     content = models.TextField(verbose_name='Текст страницы')
 
+
     def __str__(self):
         return f'{self.title}'
 
