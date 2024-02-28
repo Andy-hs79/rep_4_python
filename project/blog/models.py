@@ -18,4 +18,7 @@ class Page(models.Model):
 
 class Users(models.Model):
     pass
+
+class User2():
+    ...
 # Create your models here.py manage.py makemigrations
