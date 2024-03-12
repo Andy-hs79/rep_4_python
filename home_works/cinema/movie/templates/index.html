@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Фильмы</title>
+
+</head>
+<body>
+{% for f in all_films %}
+    <li> {{ f.name }} </li>
+{% endfor %}
+</body>
+</html>
