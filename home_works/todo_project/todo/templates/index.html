@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <form action="/todo/add/" method="post">
+        {% csrf_token %}
+        <input type="text" name="content">
+        <input type="submit" value="Save">
+    </form>
+
+    {% for item in todolistitem_list %}
+    <li>
+        {{ item.content }}
+        <form action="/todo/delete/{{item.pk}}" method="post">
+            {% csrf_token %}
+            <input type="submit" value="Delete">
+        </form>
+    </li>
+    {% endfor %}
+</body>
+</html>
