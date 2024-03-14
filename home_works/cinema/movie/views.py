@@ -6,10 +6,8 @@ from .models import Film
 
 class MovieListView(ListView):
     model = Film
-    films = model.objects.all()
-    context = {'all_films': films}
     template_name = 'index.html'
-    fields = '__all__'
+
 
 
 class MovieCreateView(CreateView):
