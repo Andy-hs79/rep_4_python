@@ -5,7 +5,7 @@ from .views import TodoListView
 
 
 urlpatterns = [
-    path("index/", TodoListView.as_view()),
+    path("", TodoListView.as_view()),
     path("add/", add_item),
     path("delete/<int:item>", delete_item),
 ]
